@@ -242,9 +242,15 @@ elif page == "🔍 SKU Explorer":
                 fill="toself", fillcolor="rgba(76,175,80,0.15)",
                 line=dict(color="rgba(255,255,255,0)"),
                 name="80% CI (future)"))
-        # Cutoff line
-        fig.add_vline(x=str(cutoff), line_dash="dot", line_color="gray",
-                      annotation_text="forecast →", annotation_position="top right")
+        # Cutoff line — use shape instead of add_vline to avoid Timestamp issues
+        fig.add_shape(type="line",
+                      x0=cutoff, x1=cutoff, y0=0, y1=1,
+                      xref="x", yref="paper",
+                      line=dict(color="gray", dash="dot", width=1.5))
+        fig.add_annotation(x=cutoff, y=1, xref="x", yref="paper",
+                           text="forecast →", showarrow=False,
+                           font=dict(color="gray", size=10),
+                           xanchor="left", yanchor="top")
         fig.update_layout(
             template="plotly_dark", height=400,
             title=f"SKU: {sel_sku}",
