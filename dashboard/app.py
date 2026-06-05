@@ -63,8 +63,12 @@ cutoff  = actuals["Date"].max()
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Zara_Logo.svg/320px-Zara_Logo.svg.png",
-             width=120)
+    st.markdown("""
+    <div style='background:#1E2130; border-radius:10px; padding:14px 18px; margin-bottom:8px;'>
+        <span style='font-size:26px; font-weight:900; letter-spacing:6px; color:white;'>ZARA</span><br>
+        <span style='font-size:11px; color:#9E9E9E; letter-spacing:2px;'>DEMAND FORECASTING</span>
+    </div>
+    """, unsafe_allow_html=True)
     st.markdown("## 📦 Demand Forecasting")
     st.markdown("---")
 
