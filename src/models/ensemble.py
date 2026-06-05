@@ -59,11 +59,21 @@ def build_unified(actuals, lgbm_fc, prop_fc, routing) -> pd.DataFrame:
     })
 
     # ── Actuals (source of truth for Units_Sold) ──────────────────────────────
-    acts = actuals[["SKU", "Date", "Units_Sold"]].copy()
+    acts     = actuals[["SKU", "Date", "Units_Sold"]].copy()
+    cutoff   = actuals["Date"].max()
 
-    # ── Merge: actuals + lgbm + prophet ───────────────────────────────────────
-    df = acts.merge(lgbm, on=["SKU", "Date"], how="left")
-    df = df.merge(prop,  on=["SKU", "Date"], how="left")
+    # ── Historical: left join actuals ← lgbm + prophet ────────────────────────
+    hist = acts.merge(lgbm, on=["SKU", "Date"], how="left")
+    hist = hist.merge(prop, on=["SKU", "Date"], how="left")
+
+    # ── Future: prophet rows beyond cutoff (Units_Sold = NaN) ─────────────────
+    future_prop = prop[prop["Date"] > cutoff].copy()
+    future_prop["Units_Sold"] = np.nan
+    # bring lgbm cols as NaN so schema matches
+    for col in ["lgbm_forecast", "lgbm_lower_80", "lgbm_upper_80"]:
+        future_prop[col] = np.nan
+
+    df = pd.concat([hist, future_prop], ignore_index=True)
 
     # ── Assign active model per SKU ───────────────────────────────────────────
     df["model_used"] = df["SKU"].apply(
