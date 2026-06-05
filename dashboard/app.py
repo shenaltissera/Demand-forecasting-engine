@@ -243,7 +243,7 @@ elif page == "🔍 SKU Explorer":
                 line=dict(color="rgba(255,255,255,0)"),
                 name="80% CI (future)"))
         # Cutoff line
-        fig.add_vline(x=cutoff, line_dash="dot", line_color="gray",
+        fig.add_vline(x=str(cutoff), line_dash="dot", line_color="gray",
                       annotation_text="forecast →", annotation_position="top right")
         fig.update_layout(
             template="plotly_dark", height=400,
